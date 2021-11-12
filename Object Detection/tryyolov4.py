@@ -8,7 +8,7 @@ with open("Object Detection\COCO_labels.txt","r") as f:
     classes= f.read().split("\n")
 '''
 
-def Object_detect(frame,confThreshold,nmsThreshold):
+def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
     #Download weights yolov4-pg.weights from https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-p6.weights
     net=cv2.dnn.readNet("Object Detection\yolov4-p6.cfg","Object Detection\yolov4-p6.weights")
     outNames = net.getUnconnectedOutLayersNames()
@@ -74,9 +74,8 @@ def Object_detect(frame,confThreshold,nmsThreshold):
     outs=net.forward(outNames)
     postprocess(frame,outs)
 
-    print(df)
+    return(df)
 
     #cv2.imshow("test",frame)
     #cv2.waitKey(0)
 
-Object_detect(cv2.imread("Object Detection\WhatsApp Image 2021-11-11 at 11.35.24 PM.jpeg"),0.4,0.35)
