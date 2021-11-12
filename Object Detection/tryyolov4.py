@@ -3,11 +3,11 @@ from cv2 import cv2
 import pandas as pd
 
 classes=[]
-with open(r"C:\Users\Sushi\Documents\Python Scripts\Seat Occupancy Detection Project\Object Detection\COCO_labels.txt","r") as f:
+with open("Object Detection\COCO_labels.txt","r") as f:
     classes= f.read().split("\n")
 
 #Download weights yolov4-pg.weights from https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-p6.weights
-net=cv2.dnn.readNet(r"C:\Users\Sushi\Documents\Python Scripts\Seat Occupancy Detection Project\Object Detection\yolov4-p6.cfg",r"C:\Users\Sushi\Documents\Python Scripts\Seat Occupancy Detection Project\Object Detection\yolov4-p6.weights")
+net=cv2.dnn.readNet("Object Detection\yolov4-p6.cfg","Object Detection\yolov4-p6.weights")
 outNames = net.getUnconnectedOutLayersNames()
 confThreshold = 0.4
 nmsThreshold=0.3
@@ -92,7 +92,7 @@ def postprocess(frame, outs):
         df=df.append({"ClassIds":classIds[i],"Confidences":confidences[i],"TLpoint":[left, top],"BRpoint":[left + width, top + height]},ignore_index=True)
         drawPred(classIds[i], confidences[i], left, top, left + width, top + height)
 
-frame=cv2.imread(r"C:\Users\Sushi\Downloads\SodaPDF-converted-library nvr_IP Camera2_library nvr_20211110161949_3117577.jpg")
+frame=cv2.imread("Object Detection\WhatsApp Image 2021-11-11 at 11.44.07 PM.jpeg")
 frameHeight = frame.shape[0]
 frameWidth = frame.shape[1]
 blob=cv2.dnn.blobFromImage(frame,1/255,(1280,1280),(0,0,0),swapRB=True,crop=False)
