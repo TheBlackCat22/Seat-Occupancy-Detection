@@ -4,21 +4,55 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import os
-
-img = cv2.imread('library nvr_IP Camera25_library nvr_20211110173721_7770227.bmp')
-cv2.rectangle(img, (205,180), (165,90), (255,255,255), 1)
-plt.imshow(img)
-plt.show()
+from tryyolov4 import Object_detect
 
 
+#                                                  TESTING
+# img = cv2.imread('library nvr_IP Camera25_library nvr_20211110173721_7770227.bmp')
+# cv2.rectangle(img, (205,180), (165,90), (255,255,255), 1)
+# plt.imshow(img)
+# plt.show()
+
+
+# SAVING SYNTAX
+# rois : {"cam_num" : [
+#                          [bottom_right_x, bottom_right_y, top_left_x, top_left_y]
+#                    ]}
 rois = {
         '2' : [ [210,255,145,180], [290,255,215,180], [270,175,210,105], [200,175,150,105] ],
         '6' : [ [150,220,85,155], [150,275,85,240] ],
-        '9' : [ [500,500],[600,600]],
-        '10' : [ [50,200,0,300], [120,165,170,255], [160,150,210,225], [132,110,160,160], [85,120,130,180] ],
+        # '9' : [ [500,500],[600,600]],
+        '10' : [ [50,300,0,200], [170,255,120,165], [210,225,160,150], [160, 160, 132,110], [130,180,85,120] ],
         '25' : [ [205,180,165,90], [295,180,260,98], [335,175,300,95] ],
                 }
 
+#                                           TESTING
+# image = cv2.imread('library nvr_IP Camera25_library nvr_20211110173721_7770227.bmp')
+# print(image.shape)
+# cv2.imshow('img',image)
+# cv2.waitKey(0)
+
+# #1
+# cv2.imshow('image_cropped_chair_1', image[90:180,166:204,:])
+# cv2.waitKey(0)
+# df = Object_detect(image[90:180,166:204,:])
+# print(df)
+
+# #2
+# cv2.imshow('image_cropped_chair_2', image[98:180,261:294,:])
+# cv2.waitKey(0)
+# df = Object_detect(image[98:180,261:294,:])
+# print(df)
+
+# #3
+# cv2.imshow('image_cropped_chair_3', image[95:175,301:334,:])
+# cv2.waitKey(0)
+# df = Object_detect(image[95:175,301:334,:])
+# print(df)
+
+
+
+# SHOULD BE IN "SEAT STATUS" folder for below function to work properly
 def load_images_from_folder(folder):
     images = []
     for sub_folder in os.listdir(folder):
@@ -32,9 +66,21 @@ def load_images_from_folder(folder):
                     # img = cv2.resize(img, (img.shape[1]*2,img.shape[0]*2))
                     roi = rois[cam_num]
                     for chair in roi:
-                        cv2.rectangle(img, (chair[2],chair[3]), (chair[0],chair[1]), (255,255,255), 1)
-                        cv2.imshow('img', img)
-                        cv2.waitKey(0)
+                        print(f"CHAIR : {roi.index(chair)}")
+                        print(chair[3],chair[1],chair[2],chair[0])
+
+                        # # whole image
+                        # df = Object_detect(img)
+                        # print(df)
+                        
+                        # cropped image
+                        df = Object_detect(img[chair[3]:chair[1],chair[2]:chair[0],:], confThreshold=0.2, nmsThreshold=0.2)
+                        print(df)
+                        
+                        # cv2.rectangle(img, (chair[2],chair[3]), (chair[0],chair[1]), (255,255,255), 1)
+                        # cv2.imshow('img', img)
+                        # cv2.waitKey(0)
+
                         # plt.imshow(img)
                         # plt.show()
                     images.append(img)
