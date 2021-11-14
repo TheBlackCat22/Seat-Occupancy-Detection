@@ -7,6 +7,10 @@ import os
 from tryyolov4 import Object_detect
 
 
+# img = cv2.imread('library nvr_IP Camera25_library nvr_20211110173721_7770227.bmp')
+# df = Object_detect(img[90:180, 165:205,:], confThreshold=0.1, nmsThreshold=0.5)
+# print(df)
+
 #                                                  TESTING
 # img = cv2.imread('library nvr_IP Camera25_library nvr_20211110173721_7770227.bmp')
 # cv2.rectangle(img, (205,180), (165,90), (255,255,255), 1)
@@ -19,8 +23,8 @@ from tryyolov4 import Object_detect
 #                          [bottom_right_x, bottom_right_y, top_left_x, top_left_y]
 #                    ]}
 rois = {
-        '2' : [ [210,255,145,180], [290,255,215,180], [270,175,210,105], [200,175,150,105] ],
-        '6' : [ [150,220,85,155], [150,275,85,240] ],
+        '2' : [ [210,255,145,180], [290,255,215,180], [270,175,210,105], [210,175,130,85] ],
+        '6' : [ [145,250,85,155], [150,275,85,240] ],
         # '9' : [ [500,500],[600,600]],
         '10' : [ [50,300,0,200], [170,255,120,165], [210,225,160,150], [160, 160, 132,110], [130,180,85,120] ],
         '25' : [ [205,180,165,90], [295,180,260,98], [335,175,300,95] ],
@@ -60,7 +64,7 @@ def load_images_from_folder(folder):
         for filename in os.listdir(folder +'/'+ sub_folder):
             cam_num = filename.split('Camera')[1]
             cam_num = cam_num.split('_')[0]
-            if cam_num in ['2','6','10','25']: #ground floor cams
+            if cam_num in ['2']: #ground floor cams
                 img = cv2.imread(os.path.join(folder, sub_folder, filename))
                 if img is not None:
                     # img = cv2.resize(img, (img.shape[1]*2,img.shape[0]*2))
@@ -98,7 +102,7 @@ images = load_images_from_folder(folder)
 #     cv2.waitKey(0)
 
 
-'''             DETECTING OBJECTS IN ROIS
+'''     DETECTING OBJECTS IN ROIS
 with open('COCO_labels.txt','r') as f:
     classIDs = f.read().split('\n')
 

@@ -10,9 +10,10 @@ with open("Object Detection\COCO_labels.txt","r") as f:
 
 def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
     #Download weights yolov4-pg.weights from https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-p6.weights
-    net=cv2.dnn.readNet("Object Detection\yolov4-p6.cfg","Object Detection\yolov4-p6.weights")
+    net=cv2.dnn.readNet("yolov4-p6.cfg","yolov4-p6.weights")
     outNames = net.getUnconnectedOutLayersNames()
-
+    cv2.imshow('frame',frame)
+    cv2.waitKey(0)
     def postprocess(frame, outs):
         frameHeight = frame.shape[0]
         frameWidth = frame.shape[1]
@@ -59,7 +60,7 @@ def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
         global df
         df=pd.DataFrame(columns=["ClassIds","Confidences","TLpoint","BRpoint"]) 
         
-        for i in indices:
+        for i in indices[0]:
             box = boxes[i]
             left = box[0]
             top = box[1]
@@ -80,3 +81,15 @@ def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
     #cv2.waitKey(0)
 
 #Object_detect(cv2.imread("Object Detection\library_nvr_IP_Camera25_library_nvr_20211110173721_7770227.jpeg"))
+img = cv2.imread('library-nvr_IP-Camera6_library-nvr_20211110161940_3109179.jpg')
+cv2.imshow('img',img)
+cv2.waitKey(0)
+df = Object_detect(img[155:250, 85:145], confThreshold=0.3, nmsThreshold=0.5)
+print(df)
+
+
+# img2  = cv2.imread('SodaPDF-converted-library nvr_IP Camera2_library nvr_20211110161949_3117577.jpg')
+# cv2.imshow('img2',img2)
+# cv2.waitKey(0)
+# df2 = Object_detect(img2[85:175, 130:210], confThreshold=0.1, nmsThreshold=0.5)
+# print(df)
