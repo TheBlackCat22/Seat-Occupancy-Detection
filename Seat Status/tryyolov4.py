@@ -78,3 +78,5 @@ def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
 
     #cv2.imshow("test",frame)
     #cv2.waitKey(0)
+
+#Object_detect(cv2.imread("Object Detection\library_nvr_IP_Camera25_library_nvr_20211110173721_7770227.jpeg"))
