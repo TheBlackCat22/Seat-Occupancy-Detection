@@ -6,54 +6,33 @@ import numpy as np
 import os
 from tryyolov4 import Object_detect
 
-
-# img = cv2.imread('library nvr_IP Camera25_library nvr_20211110173721_7770227.bmp')
-# df = Object_detect(img[90:180, 165:205,:], confThreshold=0.1, nmsThreshold=0.5)
-# print(df)
-
-#                                                  TESTING
-# img = cv2.imread('library nvr_IP Camera25_library nvr_20211110173721_7770227.bmp')
-# cv2.rectangle(img, (205,180), (165,90), (255,255,255), 1)
-# plt.imshow(img)
-# plt.show()
-
-
 # SAVING SYNTAX
 # rois : {"cam_num" : [
 #                          [bottom_right_x, bottom_right_y, top_left_x, top_left_y]
 #                    ]}
 rois = {
-        '2' : [ [210,255,145,180], [290,255,215,180], [270,175,210,105], [210,175,130,85] ],
-        '6' : [ [145,250,85,155], [150,275,85,240] ],
-        # '9' : [ [500,500],[600,600]],
-        '10' : [ [50,300,0,200], [170,255,120,165], [210,225,160,150], [160, 160, 132,110], [130,180,85,120] ],
-        '25' : [ [205,180,165,90], [295,180,260,98], [335,175,300,95] ],
+        '2' : [ [210,255,145,160], [290,255,210,160], [270,170,210,110], [210,180,140,95] ], # done
+
+        '6' : [ [145,250,85,155], [160,300,80,230] ], #done
+
+        '9' : [ [75,240,8,155], [150,280,68,170], [300,230,230,140]],
+
+        '10' : [ [50,300,0,200], [170,255,120,165], [210,225,160,150], [160, 160, 132,110], [140,180,90,120] ],#not done reconsider rois as the table stuff and not the chair? - DONE
+
+        '25' : [ [205,180,160,80], [300,155,265,90], [335,155,295,90] ],    #done
+                                                                            # first roi : bench, 
+                                                                            # SECOND ROI: OVEN (GET OVEN MAKE IT CHAIR),
+                                                                            # also sees a bottle at times have to fix or can ignore - FIXED, 
+                                                                            # third roi: tv monitor(good enough) and laptop (yayy)
                 }
 
-#                                           TESTING
-# image = cv2.imread('library nvr_IP Camera25_library nvr_20211110173721_7770227.bmp')
-# print(image.shape)
-# cv2.imshow('img',image)
-# cv2.waitKey(0)
-
-# #1
-# cv2.imshow('image_cropped_chair_1', image[90:180,166:204,:])
-# cv2.waitKey(0)
-# df = Object_detect(image[90:180,166:204,:])
-# print(df)
-
-# #2
-# cv2.imshow('image_cropped_chair_2', image[98:180,261:294,:])
-# cv2.waitKey(0)
-# df = Object_detect(image[98:180,261:294,:])
-# print(df)
-
-# #3
-# cv2.imshow('image_cropped_chair_3', image[95:175,301:334,:])
-# cv2.waitKey(0)
-# df = Object_detect(image[95:175,301:334,:])
-# print(df)
-
+no_person_rois = { '2' : [ [210,215,150,160], [280,210,215,160], [270,165,220,120], [210,180,140,140] ],
+                   '6' : [ [145,250,85,190], [160,265,80,220] ],
+                   '9' : [ [77,220,25,160], [100,215,65,170], [265,205,225,155]],
+                   '10' : [[40,240,0,190], [165,195,120,150], [190,180,140,140], [170, 170, 132,130], [150,175,95,140]],
+                  '25' : [ [195,110,160,80], [300,115,265,90], [335,120,295,90] ]
+                  }  # in these rois 'book' is seen as 'bench'
+seat_status_indicator = {'empty' : 0, 'occupied' : 1, 'on hold' : 2}
 
 
 # SHOULD BE IN "SEAT STATUS" folder for below function to work properly
@@ -64,29 +43,40 @@ def load_images_from_folder(folder):
         for filename in os.listdir(folder +'/'+ sub_folder):
             cam_num = filename.split('Camera')[1]
             cam_num = cam_num.split('_')[0]
-            if cam_num in ['2']: #ground floor cams
+            if cam_num in ['25']: #ground floor cams
                 img = cv2.imread(os.path.join(folder, sub_folder, filename))
                 if img is not None:
                     # img = cv2.resize(img, (img.shape[1]*2,img.shape[0]*2))
                     roi = rois[cam_num]
-                    for chair in roi:
-                        print(f"CHAIR : {roi.index(chair)}")
+                    for idx, chair in enumerate(roi):
+
+                        status = 'empty'
+                        print(f"{filename} CAM_NUM: {cam_num} CHAIR : {roi.index(chair)+1}")
                         print(chair[3],chair[1],chair[2],chair[0])
 
-                        # # whole image
-                        # df = Object_detect(img)
-                        # print(df)
-                        
-                        # cropped image
+                        # calling Object_detect on ROI
+                        cv2.imshow('img',img[chair[3]:chair[1],chair[2]:chair[0]])
+                        cv2.waitKey(0)
                         df = Object_detect(img[chair[3]:chair[1],chair[2]:chair[0],:], confThreshold=0.2, nmsThreshold=0.2)
-                        print(df)
-                        
-                        # cv2.rectangle(img, (chair[2],chair[3]), (chair[0],chair[1]), (255,255,255), 1)
-                        # cv2.imshow('img', img)
-                        # cv2.waitKey(0)
-
-                        # plt.imshow(img)
-                        # plt.show()
+                        # check empty df
+                        if df.empty:
+                            print("\n\nRECHECKING\n")
+                            table_section = no_person_rois[cam_num][idx]
+                            df = Object_detect(img[table_section[3]:table_section[1],table_section[2]:table_section[0],:], confThreshold=0.2, nmsThreshold=0.2)
+                            if df.empty:
+                                status = 'empty'
+                            else:
+                                status = 'on hold'
+                                print(df)
+                        else:
+                            if '1' in df['ClassIds'].values:
+                                status = 'occupied'
+                            elif any(chair_equivalent in df['ClassIds'].values for chair_equivalent in ['57','70','71','73','14']):
+                                status = 'empty'
+                            else:
+                                status = 'on hold'
+                            print(df)
+                        print(f"STATUS : {status} {seat_status_indicator[status]}")
                     images.append(img)
     return images
  

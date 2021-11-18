@@ -12,8 +12,6 @@ def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
     #Download weights yolov4-pg.weights from https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-p6.weights
     net=cv2.dnn.readNet("yolov4-p6.cfg","yolov4-p6.weights")
     outNames = net.getUnconnectedOutLayersNames()
-    cv2.imshow('frame',frame)
-    cv2.waitKey(0)
     def postprocess(frame, outs):
         frameHeight = frame.shape[0]
         frameWidth = frame.shape[1]
@@ -52,7 +50,7 @@ def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
                     height = int(detection[3] * frameHeight)
                     left = int(center_x - width / 2)
                     top = int(center_y - height / 2)
-                    classIds.append(classId)
+                    classIds.append(classId+1) #correct class ID
                     confidences.append(float(confidence))
                     boxes.append([left, top, width, height])
         
@@ -60,7 +58,7 @@ def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
         global df
         df=pd.DataFrame(columns=["ClassIds","Confidences","TLpoint","BRpoint"]) 
         
-        for i in indices[0]:
+        for i in indices:
             box = boxes[i]
             left = box[0]
             top = box[1]
@@ -81,13 +79,48 @@ def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
     #cv2.waitKey(0)
 
 #Object_detect(cv2.imread("Object Detection\library_nvr_IP_Camera25_library_nvr_20211110173721_7770227.jpeg"))
-img = cv2.imread('library-nvr_IP-Camera6_library-nvr_20211110161940_3109179.jpg')
+# img = cv2.imread('library nvr_IP Camera2_library nvr_20211110173823_7831504.jpg')
+# # make from bgr to rgb
+# img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# chair = [270,165,220,120]
+# cv2.imshow('img',img)
+# cv2.waitKey(0)
+
+# img = img[chair[3]:chair[1],chair[2]:chair[0]]
+
+# cv2.imshow('img2',img)
+# cv2.waitKey(0)
+
+# df = Object_detect(img, confThreshold=0.3, nmsThreshold=0.5)
+# print(df)
+
+# img = cv2.imread('library nvr_IP Camera9_library nvr_20211110161930_3098768.jpg')
+# img = cv2.imread('library nvr_IP Camera9_library nvr_20211110173805_7813309.jpg')
+
+# img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+
+'''
+import matplotlib.pyplot as plt
+plt.imshow(img)
+plt.show()
+
+chair =[265,205,225,155] #[RIGHT, BOTTOM, LEFT, TOP]
 cv2.imshow('img',img)
 cv2.waitKey(0)
-df = Object_detect(img[155:250, 85:145], confThreshold=0.3, nmsThreshold=0.5)
+
+img = img[chair[3]:chair[1],chair[2]:chair[0]]
+
+cv2.imshow('img2',img)
+cv2.waitKey(0)
+
+df = Object_detect(img, confThreshold=0.3, nmsThreshold=0.5)
 print(df)
+'''
 
 
+# 160:240, 142:205
 # img2  = cv2.imread('SodaPDF-converted-library nvr_IP Camera2_library nvr_20211110161949_3117577.jpg')
 # cv2.imshow('img2',img2)
 # cv2.waitKey(0)
