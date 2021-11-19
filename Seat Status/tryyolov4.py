@@ -31,9 +31,6 @@ def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
             cv2.rectangle(frame, (left, top - labelSize[1]), (left + labelSize[0], top + baseLine), (255, 255, 255), cv2.FILLED)
             cv2.putText(frame, label, (left, top), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0))
         '''
-        layerNames = net.getLayerNames()
-        lastLayerId = net.getLayerId(layerNames[-1])
-        lastLayer = net.getLayer(lastLayerId)
 
         classIds = []
         confidences = []
@@ -75,17 +72,17 @@ def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
 
     return(df)
 
-    #cv2.imshow("test",frame)
-    #cv2.waitKey(0)
 
-#Object_detect(cv2.imread("Object Detection\library_nvr_IP_Camera25_library_nvr_20211110173721_7770227.jpeg"))
-# img = cv2.imread('library nvr_IP Camera2_library nvr_20211110173823_7831504.jpg')
-# # make from bgr to rgb
-# img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+# img = cv2.imread('library nvr_IP Camera9_library nvr_20211110173805_7813309.jpg')
 
-# chair = [270,165,220,120]
+# import matplotlib.pyplot as plt
+# plt.imshow(img)
+# plt.show()
+
+# chair = [240, 210, 200,165] #[RIGHT, BOTTOM, LEFT, TOP]
 # cv2.imshow('img',img)
 # cv2.waitKey(0)
+# # 190, 165, 200, 210
 
 # img = img[chair[3]:chair[1],chair[2]:chair[0]]
 

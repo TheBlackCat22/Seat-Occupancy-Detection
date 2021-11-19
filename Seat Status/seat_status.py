@@ -15,7 +15,7 @@ rois = {
 
         '6' : [ [145,250,85,155], [160,300,80,230] ], #done
 
-        '9' : [ [75,240,8,155], [150,280,68,170], [300,230,230,140]],
+        '9' : [ [75,240,8,155], [150,280,68,170], [240,270,145,160], [300,230,230,140]],
 
         '10' : [ [50,300,0,200], [170,255,120,165], [210,225,160,150], [160, 160, 132,110], [140,180,90,120] ],#not done reconsider rois as the table stuff and not the chair? - DONE
 
@@ -28,11 +28,20 @@ rois = {
 
 no_person_rois = { '2' : [ [210,215,150,160], [280,210,215,160], [270,165,220,120], [210,180,140,140] ],
                    '6' : [ [145,250,85,190], [160,265,80,220] ],
-                   '9' : [ [77,220,25,160], [100,215,65,170], [265,205,225,155]],
+                   '9' : [ [77,220,25,160], [100,215,65,170], [240, 210, 200,165] , [265,205,225,155]],
                    '10' : [[40,240,0,190], [165,195,120,150], [190,180,140,140], [170, 170, 132,130], [150,175,95,140]],
                   '25' : [ [195,110,160,80], [300,115,265,90], [335,120,295,90] ]
                   }  # in these rois 'book' is seen as 'bench'
 seat_status_indicator = {'empty' : 0, 'occupied' : 1, 'on hold' : 2}
+
+def check_table_roi(cam_num, idx, img):
+    table_section = no_person_rois[cam_num][idx]
+    df = Object_detect(img[table_section[3]:table_section[1],table_section[2]:table_section[0],:], confThreshold=0.3, nmsThreshold=0.5)
+    if df.empty:
+        status = 'empty'
+    else:
+        status = 'on hold'
+    return status
 
 
 # SHOULD BE IN "SEAT STATUS" folder for below function to work properly
@@ -43,39 +52,46 @@ def load_images_from_folder(folder):
         for filename in os.listdir(folder +'/'+ sub_folder):
             cam_num = filename.split('Camera')[1]
             cam_num = cam_num.split('_')[0]
-            if cam_num in ['25']: #ground floor cams
+            if cam_num in ['9']:#['2', '9', '10', '6', '25']: #ground floor cams
                 img = cv2.imread(os.path.join(folder, sub_folder, filename))
                 if img is not None:
                     # img = cv2.resize(img, (img.shape[1]*2,img.shape[0]*2))
                     roi = rois[cam_num]
                     for idx, chair in enumerate(roi):
-
+                        # Initialize flad and status to default values for each chair
+                        flag = 0
                         status = 'empty'
-                        print(f"{filename} CAM_NUM: {cam_num} CHAIR : {roi.index(chair)+1}")
+                        print(f"{filename} CAM_NUM: {cam_num} CHAIR : {idx + 1}")
                         print(chair[3],chair[1],chair[2],chair[0])
 
                         # calling Object_detect on ROI
                         cv2.imshow('img',img[chair[3]:chair[1],chair[2]:chair[0]])
                         cv2.waitKey(0)
                         df = Object_detect(img[chair[3]:chair[1],chair[2]:chair[0],:], confThreshold=0.2, nmsThreshold=0.2)
+                        print('in seat status:' ,df)
+                        # print(df.empty)
                         # check empty df
                         if df.empty:
                             print("\n\nRECHECKING\n")
-                            table_section = no_person_rois[cam_num][idx]
-                            df = Object_detect(img[table_section[3]:table_section[1],table_section[2]:table_section[0],:], confThreshold=0.2, nmsThreshold=0.2)
-                            if df.empty:
-                                status = 'empty'
-                            else:
-                                status = 'on hold'
-                                print(df)
+                            check_table_roi(cam_num, idx, img)
                         else:
-                            if '1' in df['ClassIds'].values:
+                            # print(df['ClassIds'].values)
+                            # print(1 in df['ClassIds'].values)
+                            # print('1' in df['ClassIds'].values)
+                            if 1 in df['ClassIds'].values:
                                 status = 'occupied'
-                            elif any(chair_equivalent in df['ClassIds'].values for chair_equivalent in ['57','70','71','73','14']):
-                                status = 'empty'
                             else:
-                                status = 'on hold'
-                            print(df)
+                                unique_vals = df['ClassIds'].unique()
+                                for item in unique_vals:
+                                    if item not in [57,70,71,73,14]:
+                                        status = 'on hold'
+                                        flag = 1
+                                        break
+                                
+                                if flag == 0:
+                                    print("rechecking cuz we got only chair")
+                                    check_table_roi(cam_num, idx, img)
+                                    
                         print(f"STATUS : {status} {seat_status_indicator[status]}")
                     images.append(img)
     return images
