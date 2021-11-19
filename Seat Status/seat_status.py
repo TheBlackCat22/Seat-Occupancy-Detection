@@ -11,13 +11,14 @@ from tryyolov4 import Object_detect
 #                          [bottom_right_x, bottom_right_y, top_left_x, top_left_y]
 #                    ]}
 rois = {
-        '2' : [ [210,255,145,160], [290,255,210,160], [270,170,210,110], [210,180,140,95] ], # done
+        '2' : [ [210,255,145,160], [290,255,210,160], [270,170,210,110], [210,180,145,90] ], # done
 
         '6' : [ [145,250,85,155], [160,300,80,230] ], #done
 
         '9' : [ [75,240,8,155], [150,280,68,170], [240,270,145,160], [300,230,230,140]],
 
-        '10' : [ [50,300,0,200], [170,255,120,165], [210,225,160,150], [160, 160, 132,110], [140,180,90,120] ],#not done reconsider rois as the table stuff and not the chair? - DONE
+        '10' : [[170,255,120,165], [210,225,160,150], [160, 160, 132,110], [140,180,90,120] ],# [50,300,0,200]
+        #  not done reconsider rois as the table stuff and not the chair? - DONE
 
         '25' : [ [205,180,160,80], [300,155,265,90], [335,155,295,90] ],    #done
                                                                             # first roi : bench, 
@@ -29,7 +30,7 @@ rois = {
 no_person_rois = { '2' : [ [210,215,150,160], [280,210,215,160], [270,165,220,120], [210,180,140,140] ],
                    '6' : [ [145,250,85,190], [160,265,80,220] ],
                    '9' : [ [77,220,25,160], [100,215,65,170], [240, 210, 200,165] , [265,205,225,155]],
-                   '10' : [[40,240,0,190], [165,195,120,150], [190,180,140,140], [170, 170, 132,130], [150,175,95,140]],
+                   '10' : [ [165,195,120,150], [190,180,140,140], [170, 170, 132,130], [150,175,95,140]], #[40,240,0,190],
                   '25' : [ [195,110,160,80], [300,115,265,90], [335,120,295,90] ]
                   }  # in these rois 'book' is seen as 'bench'
 seat_status_indicator = {'empty' : 0, 'occupied' : 1, 'on hold' : 2}
@@ -52,8 +53,9 @@ def load_images_from_folder(folder):
         for filename in os.listdir(folder +'/'+ sub_folder):
             cam_num = filename.split('Camera')[1]
             cam_num = cam_num.split('_')[0]
-            if cam_num in ['9']:#['2', '9', '10', '6', '25']: #ground floor cams
+            if cam_num in ['6']:#['2', '9', '10', '6', '25']: #ground floor cams
                 img = cv2.imread(os.path.join(folder, sub_folder, filename))
+                img = cv2.resize(img , (352, 288))
                 if img is not None:
                     # img = cv2.resize(img, (img.shape[1]*2,img.shape[0]*2))
                     roi = rois[cam_num]
