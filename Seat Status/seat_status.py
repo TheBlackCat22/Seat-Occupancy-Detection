@@ -44,23 +44,23 @@ def check_table_roi(cam_num, idx, img):
         status = 'on hold'
     return status
 
+final_df = pd.DataFrame(columns = ['Camera Number', 'Chair Number', 'Status' ])
 
 # SHOULD BE IN "SEAT STATUS" folder for below function to work properly
 def load_images_from_folder(folder):
-    images = []
+    global final_df
     for sub_folder in os.listdir(folder):
-        # if sub_folder == '10_420':
         for filename in os.listdir(folder +'/'+ sub_folder):
             cam_num = filename.split('Camera')[1]
             cam_num = cam_num.split('_')[0]
-            if cam_num in ['6']:#['2', '9', '10', '6', '25']: #ground floor cams
+            if cam_num in ['2', '9', '10', '6', '25']: #ground floor cams
                 img = cv2.imread(os.path.join(folder, sub_folder, filename))
                 img = cv2.resize(img , (352, 288))
                 if img is not None:
                     # img = cv2.resize(img, (img.shape[1]*2,img.shape[0]*2))
                     roi = rois[cam_num]
                     for idx, chair in enumerate(roi):
-                        # Initialize flad and status to default values for each chair
+                        # Initialize flag and status to default values for each chair
                         flag = 0
                         status = 'empty'
                         print(f"{filename} CAM_NUM: {cam_num} CHAIR : {idx + 1}")
@@ -68,14 +68,14 @@ def load_images_from_folder(folder):
 
                         # calling Object_detect on ROI
                         cv2.imshow('img',img[chair[3]:chair[1],chair[2]:chair[0]])
-                        cv2.waitKey(0)
+                        cv2.waitKey(2)
                         df = Object_detect(img[chair[3]:chair[1],chair[2]:chair[0],:], confThreshold=0.2, nmsThreshold=0.2)
                         print('in seat status:' ,df)
                         # print(df.empty)
                         # check empty df
                         if df.empty:
                             print("\n\nRECHECKING\n")
-                            check_table_roi(cam_num, idx, img)
+                            status = check_table_roi(cam_num, idx, img)
                         else:
                             # print(df['ClassIds'].values)
                             # print(1 in df['ClassIds'].values)
@@ -92,15 +92,20 @@ def load_images_from_folder(folder):
                                 
                                 if flag == 0:
                                     print("rechecking cuz we got only chair")
-                                    check_table_roi(cam_num, idx, img)
+                                    status = check_table_roi(cam_num, idx, img)
                                     
                         print(f"STATUS : {status} {seat_status_indicator[status]}")
-                    images.append(img)
-    return images
+                        final_df = final_df.append({'Camera Number' : cam_num, 'Chair Number' : idx + 1, 'Status' : seat_status_indicator[status]}, ignore_index=True)
+                    
+
  
 
 folder = 'libimg'
-images = load_images_from_folder(folder)
+load_images_from_folder(folder)
+
+# save final_df in a csv file
+final_df.to_csv('../web integration/seat_status.csv', index = False)
+
 
 # print(images)
 # for image in images: 

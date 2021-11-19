@@ -9,7 +9,7 @@ with open("Object Detection\COCO_labels.txt","r") as f:
 '''
 
 def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
-    #Download weights yolov4-pg.weights from https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-p6.weights
+    #Download weights yolov4-p6.weights from https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-p6.weights
     net=cv2.dnn.readNet("yolov4-p6.cfg","yolov4-p6.weights")
     outNames = net.getUnconnectedOutLayersNames()
     def postprocess(frame, outs):
@@ -74,7 +74,7 @@ def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
 
 '''
 img = cv2.imread('IP Camera9_library nvr_library nvr_20211106131741_20211106135959_1175882.jpg')
-print(img.shape)
+# print(img.shape)
 img = cv2.resize(img , (352, 288))
 # cv2.imshow('image',img)
 # cv2.waitKey(0)
@@ -96,30 +96,3 @@ cv2.waitKey(0)
 df = Object_detect(img, confThreshold=0.3, nmsThreshold=0.5)
 print(df)
 '''
-
-
-'''
-import matplotlib.pyplot as plt
-plt.imshow(img)
-plt.show()
-
-chair =[265,205,225,155] #[RIGHT, BOTTOM, LEFT, TOP]
-cv2.imshow('img',img)
-cv2.waitKey(0)
-
-img = img[chair[3]:chair[1],chair[2]:chair[0]]
-
-cv2.imshow('img2',img)
-cv2.waitKey(0)
-
-df = Object_detect(img, confThreshold=0.3, nmsThreshold=0.5)
-print(df)
-'''
-
-
-# 160:240, 142:205
-# img2  = cv2.imread('SodaPDF-converted-library nvr_IP Camera2_library nvr_20211110161949_3117577.jpg')
-# cv2.imshow('img2',img2)
-# cv2.waitKey(0)
-# df2 = Object_detect(img2[85:175, 130:210], confThreshold=0.1, nmsThreshold=0.5)
-# print(df)
