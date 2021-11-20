@@ -50,8 +50,7 @@ def load_images_from_folder(folder):
         cam_num = cam_num.split('_')[0]
         if cam_num in ['2','6','9','10','25']: #ground floor cams
             img = cv2.imread(os.path.join(folder, filename))
-            cv2.imshow('img',img)
-            cv2.waitKey(0)
+            print(f"Camera Number: {cam_num}\t ROI number : {idx + 1} is being processed.")
 
             # resize image - rois are defined on this size
             img = cv2.resize(img , (352, 288)) 
@@ -67,9 +66,6 @@ def load_images_from_folder(folder):
                     status = 'empty'
                     
                     # calling Object_detect on ROI
-                    cv2.imshow('img',img[chair[3]:chair[1],chair[2]:chair[0]])
-                    cv2.waitKey(2)
-                    
                     df = Object_detect(img[chair[3]:chair[1],chair[2]:chair[0],:], confThreshold=0.3, nmsThreshold=0.5)
 
                     # check if df is empty
@@ -90,9 +86,9 @@ def load_images_from_folder(folder):
                             if flag == 0:
                                 # print("rechecking because we got only chair")
                                 status = check_table_roi(cam_num, idx, img)
-                                
+                    print(f"Status : {status}\n")
                     final_df = final_df.append({'Camera Number' : cam_num, 'Chair Number' : idx + 1, 'Status' : seat_status_indicator[status]}, ignore_index=True)
-                
+    print("Instance complete")
     return final_df
 
 # change folder name to: 'f1', 'f2', 'f3' to test other images
