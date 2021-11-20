@@ -35,7 +35,6 @@
         </div>
     </div>
     <div id="cam2">
-        <!-- <h3 style="text-align: center;">Ground Floor</h3> -->
         <h3>Camera-6</h3>
         <div style="position:relative;width: 75px;height:200px;left: 35%;top: 15%;">
             <div id="table" style="position:absolute;width:75px;height:100px;top: 20%;left: 0%;background-color:black">&nbsp;</div>
@@ -102,6 +101,8 @@
     <script>
         async function getData() {
 
+            // Fetching data from the CSV
+
             let response = await fetch('seat_status.csv');
             const data = await response.text();
             const cams = [];
@@ -114,8 +115,8 @@
             chairs.push(parseFloat(cols[1]));
             status.push(parseFloat(cols[2]))
             });
-            // document.getElementById("show").innerHTML = chairs;
-            // document.getElementById("show2").innerHTML = status;
+
+            // Creating variables for the chairs
 
             var c1 = document.getElementById("c1");
             var c2 = document.getElementById("c2");
@@ -144,10 +145,14 @@
             var c5_7 = document.getElementById("c5_7");
             var c5_8 = document.getElementById("c5_8");
 
+            // Function for color-coding
+
             function cc(c,i) {
                 if(status[i]==1){c.style["background-color"] = "red";}
                 else if(status[i]==2){c.style["background-color"] = "yellow"}
                 }
+            
+            // Calling the function for each chair with their status
             
             cc(c1,0); 
             cc(c2,1);
@@ -162,7 +167,6 @@
             cc(c3_5,10);
             cc(c3_6,11);
             cc(c3_7,12);
-            // cc(c3_8,20);
             cc(c4_1,13);
             cc(c4_2,14);
             cc(c4_3,15);
@@ -177,7 +181,6 @@
 
 
     </script>
-    <!-- <div id ="show"></div>
-    <div id ="show2"></div> -->
+
 </body>
 </html>
