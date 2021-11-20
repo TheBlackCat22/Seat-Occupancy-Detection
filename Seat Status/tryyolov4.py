@@ -73,7 +73,9 @@ def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
     return(df)
 
 '''
-img = cv2.imread('IP Camera9_library nvr_library nvr_20211106131741_20211106135959_1175882.jpg')
+img = cv2.imread('library nvr_IP Camera2_library nvr_20211110161949_3117577')
+
+# img = cv2.imread('library nvr_IP Camera9_library nvr_20211110161930_3098768.jpg')
 # print(img.shape)
 img = cv2.resize(img , (352, 288))
 # cv2.imshow('image',img)
@@ -83,14 +85,16 @@ import matplotlib.pyplot as plt
 plt.imshow(img)
 plt.show()
 
-chair = [300,230,230,140] #[RIGHT, BOTTOM, LEFT, TOP]
+chair = [222,163,193,145] #[RIGHT, BOTTOM, LEFT, TOP]
 cv2.imshow('img',img)
 cv2.waitKey(0)
-# 190, 165, 200, 210
 
+# 180,130,225,165
 img = img[chair[3]:chair[1],chair[2]:chair[0]]
-
-cv2.imshow('img2',img)
+# save img as cam2_chairi.jpg
+# cv2.imwrite('cam2_chair4.jpg',img)
+img = cv2.resize(img , (352*2, 288*2))
+cv2.imshow('roi', img)
 cv2.waitKey(0)
 
 df = Object_detect(img, confThreshold=0.3, nmsThreshold=0.5)
