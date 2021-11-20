@@ -50,7 +50,7 @@ def load_images_from_folder(folder):
         cam_num = cam_num.split('_')[0]
         if cam_num in ['2','6','9','10','25']: #ground floor cams
             img = cv2.imread(os.path.join(folder, filename))
-            print(f"Camera Number: {cam_num}\t ROI number : {idx + 1} is being processed.")
+            
 
             # resize image - rois are defined on this size
             img = cv2.resize(img , (352, 288)) 
@@ -60,7 +60,7 @@ def load_images_from_folder(folder):
                 roi = rois[cam_num]
 
                 for idx, chair in enumerate(roi):
-
+                    print(f"Camera Number: {cam_num}\t ROI number : {idx + 1} is being processed.")
                     # Initialize flag and status to default values for each chair
                     flag = 0
                     status = 'empty'
