@@ -2,12 +2,7 @@ import numpy as np
 from cv2 import cv2
 import pandas as pd
 
-
-classes=[]
-with open("COCO_labels.txt","r") as f:
-    classes= f.read().split("\n")
-
-
+#Object detection function 
 def Object_detect(frame,confThreshold=0.4,nmsThreshold=0.3):
     #Download weights yolov4-p6.weights from https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-p6.weights
     net=cv2.dnn.readNet("yolov4-p6.cfg","yolov4-p6.weights")
