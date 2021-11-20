@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Coding Train: Data and APIs Project 1</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</head>
+<body>
+
+    <style>
+        html, body { height:100%; margin:0; padding:0 }
+        div { position:fixed; width:33.33%; height:47% }
+        #head { top:0%; left: 33.33%; text-align: center;}
+        #cam1 { top:6%;   left:0;   background:darkgray}
+        #cam2 { top:6%;   left:33.33%; background:lightgray}
+        #cam3 { top:6%; left:66.66%;   background:darkgray}
+        #cam4 { top:53%; left:0%; background:lightgray}
+        #cam5 { top:53%; left:33.33%; background:darkgray}
+        #keys { top:53%; left:66.66%; background:lightgray}
+    </style>
+
+    <div id="head">
+        <h2>Ground Floor</h2>
+    </div>
+    <div id="cam1">
+        <h3>Camera-2</Camera-2></h3>
+        <div style="position:relative;width:150px;height:200px;left: 35%;top: 25%;">
+            <div id="table" style="position:absolute;width:150px;height:100px;top: 20%;left: 0%;background-color:black">&nbsp;</div>
+            <div id="c4" style="position:absolute;width:30px;height:15px;top: 10%;left: 10%;background-color:green">&nbsp;</div>
+            <div id="c3" style="position:absolute;width:30px;height:15px;top: 10%;right: 10%;background-color:green">&nbsp;</div>
+            <div id="c1" style="position:absolute;width:30px;height:15px;bottom: 20%;left: 10%;background-color:green">&nbsp;</div>
+            <div id="c2" style="position:absolute;width:30px;height:15px;bottom: 20%;right: 10%;background-color:green">&nbsp;</div>
+        </div>
+    </div>
+    <div id="cam2">
+        <!-- <h3 style="text-align: center;">Ground Floor</h3> -->
+        <h3>Camera-6</h3>
+        <div style="position:relative;width: 75px;height:200px;left: 35%;top: 25%;">
+            <div id="table" style="position:absolute;width:75px;height:100px;top: 20%;left: 0%;background-color:black">&nbsp;</div>
+            <div id="c2_2" style="position:absolute;width:30px;height:15px;top: 10%;left: 30%;background-color:green">&nbsp;</div>
+            <div id="c2_1" style="position:absolute;width:30px;height:15px;top: 72.5%;left: 30%;background-color:green">&nbsp;</div>
+        </div>
+    </div>
+    <div id="cam3">
+        <h3>Camera-9</h3>
+        <div style="position:relative;width:200px;height:150px;left: 5%;top: 30%;">
+            <div id="table" style="position:absolute;width:100px;height:150px;top: 0%;left: 20%;background-color:black">&nbsp;</div>
+            <div id="c3_4" style="position:absolute;width:15px;height:30px;top: 10%;left: 10%;background-color:green">&nbsp;</div>
+            <div id="c3_3" style="position:absolute;width:15px;height:30px;top: 10%;right: 20%;background-color:green">&nbsp;</div>
+            <div id="c3_1" style="position:absolute;width:15px;height:30px;bottom: 10%;left: 10%;background-color:green">&nbsp;</div>
+            <div id="c3_2" style="position:absolute;width:15px;height:30px;bottom: 10%;right: 20%;background-color:green">&nbsp;</div>
+        </div>
+        <div style="position:relative;width:200px;height:150px;left: 60%;top: -10%;">
+            <div id="table" style="position:absolute;width:100px;height:150px;top: 0%;left: 20%;background-color:black">&nbsp;</div>
+            <div id="c3_8" style="position:absolute;width:15px;height:30px;top: 10%;left: 10%;background-color:gray">&nbsp;</div>
+            <div id="c3_7" style="position:absolute;width:15px;height:30px;top: 10%;right: 20%;background-color:green">&nbsp;</div>
+            <div id="c3_5" style="position:absolute;width:15px;height:30px;bottom: 10%;left: 10%;background-color:green">&nbsp;</div>
+            <div id="c3_6" style="position:absolute;width:15px;height:30px;bottom: 10%;right: 20%;background-color:green">&nbsp;</div>
+        </div>
+    </div>​
+    <div id="cam4">
+        <h3>Camera-10</h3>
+        <div style="position:relative;width:150px;height:200px;left: 35%;top: 25%;">
+            <div id="table" style="position:absolute;width:150px;height:100px;top: 20%;left: 0%;background-color:black">&nbsp;</div>
+            <div id="c4_4" style="position:absolute;width:30px;height:15px;top: 10%;left: 10%;background-color:green">&nbsp;</div>
+            <div id="c4_3" style="position:absolute;width:30px;height:15px;top: 10%;right: 10%;background-color:green">&nbsp;</div>
+            <div id="c4_1" style="position:absolute;width:30px;height:15px;bottom: 20%;left: 10%;background-color:green">&nbsp;</div>
+            <div id="c4_2" style="position:absolute;width:30px;height:15px;bottom: 20%;right: 10%;background-color:green">&nbsp;</div>
+        </div>
+    </div>
+    <div id="cam5">
+        <h3>Camera-25</h3>
+        <div style="position:relative;width:150px;height:200px;left: 10%;top: 25%;">
+            <div id="table" style="position:absolute;width:150px;height:100px;top: 20%;left: 0%;background-color:black">&nbsp;</div>
+            <div id="c5_4" style="position:absolute;width:30px;height:15px;top: 10%;left: 10%;background-color:gray">&nbsp;</div>
+            <div id="c5_3" style="position:absolute;width:30px;height:15px;top: 10%;right: 10%;background-color:gray">&nbsp;</div>
+            <div id="c5_1" style="position:absolute;width:30px;height:15px;bottom: 20%;left: 10%;background-color:gray">&nbsp;</div>
+            <div id="c5_2" style="position:absolute;width:30px;height:15px;bottom: 20%;right: 10%;background-color:green">&nbsp;</div>
+        </div>
+        <div style="position:relative;width:150px;height:200px;left: 60%;top: -28%;">
+            <div id="table" style="position:absolute;width:150px;height:100px;top: 20%;left: 0%;background-color:black">&nbsp;</div>
+            <div id="c5_8" style="position:absolute;width:30px;height:15px;top: 10%;left: 10%;background-color:gray">&nbsp;</div>
+            <div id="c5_7" style="position:absolute;width:30px;height:15px;top: 10%;right: 10%;background-color:gray">&nbsp;</div>
+            <div id="c5_5" style="position:absolute;width:30px;height:15px;bottom: 20%;left: 10%;background-color:green">&nbsp;</div>
+            <div id="c5_6" style="position:absolute;width:30px;height:15px;bottom: 20%;right: 10%;background-color:green">&nbsp;</div>
+        </div>
+    </div>​
+    <div id="keys", style="text-align: center; background-color: black;">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <h2 style="color: red;">Occupied : RED</h2>
+        <h2 style="color: yellow;">On Hold : YELLOW</h2>
+        <h2 style="color: green;">Empty : GREEN</h2>
+        <h2 style="color: gray;">Not Visible : GRAY</h2>
+    </div>
+
+    <script>
+        async function getData() {
+
+            let response = await fetch('seat_status.csv');
+            const data = await response.text();
+            const cams = [];
+            const chairs = [];
+            const status = [];
+            const rows = data.split('\n').slice(1);
+            rows.forEach(row => {
+            const cols = row.split(',');
+            cams.push(cols[0]);
+            chairs.push(parseFloat(cols[1]));
+            status.push(parseFloat(cols[2]))
+            });
+            // document.getElementById("show").innerHTML = chairs;
+            // document.getElementById("show2").innerHTML = status;
+
+            var c1 = document.getElementById("c1");
+            var c2 = document.getElementById("c2");
+            var c3 = document.getElementById("c3");
+            var c4 = document.getElementById("c4");
+            var c2_1 = document.getElementById("c2_1");
+            var c2_2 = document.getElementById("c2_2");
+            var c3_1 = document.getElementById("c3_1");
+            var c3_2 = document.getElementById("c3_2");
+            var c3_3 = document.getElementById("c3_3");
+            var c3_4 = document.getElementById("c3_4");
+            var c3_5 = document.getElementById("c3_5");
+            var c3_6 = document.getElementById("c3_6");
+            var c3_7 = document.getElementById("c3_7");
+            var c3_8 = document.getElementById("c3_8");
+            var c4_1 = document.getElementById("c4_1");
+            var c4_2 = document.getElementById("c4_2");
+            var c4_3 = document.getElementById("c4_3");
+            var c4_4 = document.getElementById("c4_4");
+            var c5_1 = document.getElementById("5_1");
+            var c5_2 = document.getElementById("c5_2");
+            var c5_3 = document.getElementById("c5_3");
+            var c5_4 = document.getElementById("c5_4");
+            var c5_5 = document.getElementById("c5_5");
+            var c5_6 = document.getElementById("c5_6");
+            var c5_7 = document.getElementById("c5_7");
+            var c5_8 = document.getElementById("c5_8");
+
+            function cc(c,i) {
+                if(status[i]==1){c.style["background-color"] = "red";}
+                else if(status[i]==2){c.style["background-color"] = "yellow"}
+                }
+            
+            cc(c1,0); 
+            cc(c2,1);
+            cc(c3,2); 
+            cc(c4,3);
+            cc(c2_1,4);
+            cc(c2_2,5);
+            cc(c3_1,6);
+            cc(c3_2,7);
+            cc(c3_3,8);
+            cc(c3_4,9);
+            cc(c3_5,10);
+            cc(c3_6,11);
+            cc(c3_7,12);
+            // cc(c3_8,20);
+            cc(c4_1,13);
+            cc(c4_2,14);
+            cc(c4_3,15);
+            cc(c4_4,16);
+            cc(c5_2,17);
+            cc(c5_5,18);
+            cc(c5_6,19);
+
+            return { chairs, status };
+        }
+        getData();
+
+
+    </script>
+    <!-- <div id ="show"></div>
+    <div id ="show2"></div> -->
+</body>
+</html>
