@@ -5,6 +5,7 @@ import numpy as np
 
 import os
 from object_detection import Object_detect
+
 # SAVING SYNTAX
 # rois : {"cam_num" : [
 #                          [bottom_right_x, bottom_right_y, top_left_x, top_left_y]
@@ -91,16 +92,12 @@ def load_images_from_folder(folder):
                                 
                     # print(f"STATUS : {status} {seat_status_indicator[status]}")
                     final_df = final_df.append({'Camera Number' : cam_num, 'Chair Number' : idx + 1, 'Status' : seat_status_indicator[status]}, ignore_index=True)
-                    if idx == 1:
-                        print("OPPPPPPPPPPPP")
-                        break
                 
     return final_df
 
 # change folder name to: 'f1', 'f2', 'f3' to test other images
 folder_name = 'f3'
 final_df = load_images_from_folder(folder_name)
-print("I am done")
 
 # changing type to 'int' so as to sort by camera number
 final_df = final_df.astype(int)
