@@ -1,7 +1,6 @@
 import cv2
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
+# import matplotlib.pyplot as plt - to make rois
 
 import os
 from object_detection import Object_detect
