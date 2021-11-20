@@ -1,11 +1,11 @@
 import cv2
 import pandas as pd
-# import matplotlib.pyplot as plt - to make rois
+# import matplotlib.pyplot as plt - used to make rois
 
 import os
 from object_detection import Object_detect
 
-# SAVING SYNTAX
+# CONVENTION
 # rois : {"cam_num" : [
 #                          [bottom_right_x, bottom_right_y, top_left_x, top_left_y]
 #                    ]}
@@ -21,14 +21,18 @@ rois = {
         '25' : [ [205,180,160,80], [300,155,265,90], [335,155,295,90] ],    
                 }
 
+# if the model only detects chairs or detects nothing at all then zoom in (search in these rois)
 no_person_rois = { '2' : [ [210,215,150,160], [280,210,215,160], [270,165,220,120], [210,180,140,140] ],
                    '6' : [ [145,250,85,190], [160,265,80,220] ],
                    '9' : [ [77,220,25,160], [100,215,65,170], [105,170,75,140], [80,165,51,142], [240, 210, 200,165] , [265,205,225,155], [248,165,214,130], ], # table-2: 7 was unobservable.
                    '10' : [ [165,195,120,150], [190,180,140,140], [170, 170, 132,130], [150,175,95,140]], 
                   '25' : [ [195,110,160,80], [300,115,265,90], [335,120,295,90] ]
                   }  
+
+# mapping seat status to a value
 seat_status_indicator = {'empty' : 0, 'occupied' : 1, 'on hold' : 2}
 
+# check in the smaller rois (only called when no object is detected or only chair is detected in the big ROI)
 def check_table_roi(cam_num, idx, img):
     table_section = no_person_rois[cam_num][idx]
     df = Object_detect(img[table_section[3]:table_section[1],table_section[2]:table_section[0],:], confThreshold=0.3, nmsThreshold=0.5)
@@ -38,7 +42,7 @@ def check_table_roi(cam_num, idx, img):
         status = 'on hold'
     return status
 
-
+# detect images in folder 
 def load_images_from_folder(folder):
     final_df = pd.DataFrame(columns = ['Camera Number', 'Chair Number', 'Status' ])
     for filename in os.listdir(folder):
@@ -48,6 +52,7 @@ def load_images_from_folder(folder):
             img = cv2.imread(os.path.join(folder, filename))
             cv2.imshow('img',img)
             cv2.waitKey(0)
+
             # resize image - rois are defined on this size
             img = cv2.resize(img , (352, 288)) 
 
@@ -60,15 +65,12 @@ def load_images_from_folder(folder):
                     # Initialize flag and status to default values for each chair
                     flag = 0
                     status = 'empty'
-                    print(f"{filename} CAM_NUM: {cam_num} CHAIR : {idx + 1}")
-                    # print(chair[3],chair[1],chair[2],chair[0])
                     
                     # calling Object_detect on ROI
                     cv2.imshow('img',img[chair[3]:chair[1],chair[2]:chair[0]])
                     cv2.waitKey(2)
                     
                     df = Object_detect(img[chair[3]:chair[1],chair[2]:chair[0],:], confThreshold=0.3, nmsThreshold=0.5)
-                    # print('in seat status:' ,df)
 
                     # check if df is empty
                     if df.empty:
@@ -80,16 +82,15 @@ def load_images_from_folder(folder):
                         else:
                             unique_vals = df['ClassIds'].unique()
                             for item in unique_vals:
-                                if item not in [57,69,70,71,73,14]: # ignore chairs
+                                if item not in [57,69,70,71,73,14]: # ignore chairs ( all these items have been mapped to chairs, manually by us )
                                     status = 'on hold'
                                     flag = 1
                                     break
                             
                             if flag == 0:
-                                # print("rechecking cuz we got only chair")
+                                # print("rechecking because we got only chair")
                                 status = check_table_roi(cam_num, idx, img)
                                 
-                    # print(f"STATUS : {status} {seat_status_indicator[status]}")
                     final_df = final_df.append({'Camera Number' : cam_num, 'Chair Number' : idx + 1, 'Status' : seat_status_indicator[status]}, ignore_index=True)
                 
     return final_df
