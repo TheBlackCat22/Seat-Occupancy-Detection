@@ -1,6 +1,8 @@
 
 The required modules are specified in the requirements.txt file.
 
+Results Explained in the final Report pdf.
+
 The main contributor of:
 
 object_detection.py : Sushil Vemuri 
