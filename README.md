@@ -5,18 +5,19 @@ This repo provides a method of seat occupancy detection in the library, using Co
 
 ## Problem Definitiion
 The challenge was to build an AI system that uses the library's CCTV footage to output the seat status of every seat of the library in almost real-time. Then to update the seat status on a website for all IISERB members to access.
+
+
+## Method  
+There are 4 major steps,
 <img align='right' src="assets/roi.png" width="200">
 
-
-## Method
-There are 4 major steps,
-- **Data Collection**
+- **Data Collection**  
 The CCTV data from the IISERB library was obtained at 4 different instances of time.
 
-- **ROI (Region of Interest) Definition & Cropping**
+- **ROI (Region of Interest) Definition & Cropping**  
 Converted the bitmap images to jpeg and then all images were resized to ensure consistency. Finally, We cropped the defined ROIS from the images.
 
-- **Object Detection**
+- **Object Detection**  
 We used a pre-trained object detection model called the YOLOv4-p6. YOLOv4 is a real-time object detection model published in April 2020
 that achieved state-of-the-art performance on the COCO dataset.
 <img align='right' src="assets/output.png" width="149"> <img align='right' src="assets/detection.png" width="250"> 
@@ -26,7 +27,7 @@ Each ROI was passed into the object detection function with a confidence thresho
         - Now, the smaller ROIS were passed to the object detection phase. If, once again, the dataframe returned was empty, then it was concluded that the seat was “EMPTY”. 
         - If any object was detected within the smaller ROI, then the seat was marked as “ON HOLD”.
 
-- **Website**
+- **Website**  
 All this information was update onto an html page.
 <p align="center"> <img src="assets/website.png" width="500"></p>
 
